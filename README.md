@@ -4,10 +4,10 @@ Creates hotkeys for controlling Spotify and other mediaprograms with standard ke
 ## Installation
 
   ### Easy Mode:
-    * Run the executable
+  * Run the executable
    ### Medium Mode:
-    * Install AutoHotkey
-    * Run the .ahk-File
+  * Install AutoHotkey
+  * Run the .ahk-File
 
 
 ## Controls
