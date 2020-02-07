@@ -38,6 +38,3 @@ Alt + F1 | Show all controls
 <a name="foot2">2</a>: Utilizes Windows Media functions. Will also work in other players that register those events (f.e. Chrome)
 
 <a name="foot3">3</a>: Utilizes Windows System Control. Will take effect on all Windows Applications
-
-The Controls `Alt + s`, `Alt + x`, `Alt + a` and `Alt + i / k` only work if Spotify is installed.
-If it is not installed the OSD will still trigger but nothing else will happen.
