@@ -30,7 +30,7 @@ StartUp(){
 	}
 	else{
 		Try {
-			run "C:\Users\%A_Username%\AppData\Roaming\Spotify\Spotify.exe"
+			run "%appdata%\Spotify\Spotify.exe"
 		}Catch{
 			return
 		}
@@ -194,7 +194,7 @@ StartSpotify(){ ;Starts Spotify and closes non important instances of it or Hide
 	{
 		Try
 		{
-			run "C:\Users\%A_Username%\AppData\Roaming\Spotify\Spotify.exe",, Min
+			run "%appdata%\Spotify\Spotify.exe",, Min
 		}
 		Catch
 		{
