@@ -154,21 +154,13 @@ PlayPause(){ ;Uses Media Event 'Play Pause'
 }
 
 ShuffleSwitch(){ ;Routes Ctrl+S into the Spotify .exe to trigger the shuffle button
-		DetectHiddenWindows, On
-		IfWinExist ahk_exe Spotify.exe 
-		{
-			WinHide
-			IfWinExist ahk_exe Spotify.exe
-			{
-				WinHide
-			}
-			WinGet, winInfo, List, ahk_exe Spotify.exe
-			indexer := 3
-			thisID := winInfo%indexer%
-			ControlFocus,, ahk_id %thisID%
-			Send {Ctrl Down}s{Ctrl Up}
-			OSD("Shuffle Mode On / Off")
-		}
+	DetectHiddenWindows, On
+	WinGet, winInfo, List, ahk_exe Spotify.exe
+	indexer := 3
+	thisID := winInfo%indexer%
+	ControlFocus,, ahk_id %thisID%
+	Send {Ctrl Down}s{Ctrl Up}
+	OSD("Shuffle Mode On / Off")
 }
 
 StartSpotify(){ ;Starts Spotify and closes non important instances of it or Hides spotify completely
@@ -227,20 +219,13 @@ TransOff(){ ;Sets the Transparency of the active Spotify window to 250 (Non Tran
 
 SongInfo(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
 	DetectHiddenWindows, On
-	IfWinExist ahk_exe Spotify.exe 
-	{
-		WinHide
-		IfWinExist ahk_exe Spotify.exe
-		{
-			WinHide
-		}
-		WinGet, winInfo, List, ahk_exe Spotify.exe
-		indexer := 3
-		thisID := winInfo%indexer%
-		WinGetTitle, playing, ahk_id %thisID%
-		Msgbox %playing%
-		DetectHiddenWindows, Off
-	}
+	WinGet, winInfo, List, ahk_exe Spotify.exe
+	indexer := 3
+	thisID := winInfo%indexer%
+	WinGetTitle, playing, ahk_id %thisID%
+	Msgbox %playing%
+	DetectHiddenWindows, Off
+	
 }
 
 OpenHelp(){ ;Shows all Hotkeys implemented
