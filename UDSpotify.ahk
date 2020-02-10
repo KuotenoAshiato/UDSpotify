@@ -39,89 +39,87 @@ StartUp(){
 	}
 }
 
+MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
+    MouseGetPos,,, window
+    return WinExist(windowtitle . " ahk_id " . window)
+}
+
 ;All Hotkeys to start the software
 !r::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		VolUp()
 	else
 		Send {Alt Down}r{Alt Up}
 	return
 !f::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		VolDown()
 	else
 		Send {Alt Down}f{Alt Up}
 	return
 !v::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		VolMute()
 	else
 		Send {Alt Down}v{Alt Up}
 	return
 !e::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		PlayNext()
 	else
 		Send {Alt Down}e{Alt Up}
 	return
 !q::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		PlayPrev()
 	else
 		Send {Alt Down}q{Alt Up}
 	return
 !w::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		PlayPause()
 	else
 		Send {Alt Down}w{Alt Up}
 	return
 !s::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		StartSpotify()
 	else
 		Send {Alt Down}s{Alt Up}
 	return
 !x::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		ShuffleSwitch()
 	else
 		Send {Alt Down}x{Alt Up}
 	return
 !a::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		SongInfo()
 	else
 		Send {Alt Down}a{Alt Up}
 	return
 !i::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		TransOn()
 	else
 		Send {Alt Down}i{Alt Up}
 	return
 !k::
-	if MouseCheck()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
 		TransOff()
 	else
 		Send {Alt Down}k{Alt Up}
 	return
 
 !F1::
-	OpenHelp()
+	if MouseIsOver("ahk_class Shell_TrayWnd")
+		OpenHelp()
+	else
+		Send {Alt Down}{F1}{Alt Up}
 	return
-!^y:: Reload ;Reload the script from the workspace
 
-MouseCheck(){ ;Checks if the Mousecursor is on the taskbar
-	CoordMode, Mouse, Screen
-	MouseGetPos,,MouseY
-	if (MouseY > 1010){
-		return true
-	}
-	else{
-		return false
-	}
-}
+!^y:: Reload ;Reload the script from the workspace
 
 VolUp(){ ;Increases the System Volume
 		SoundSet +1
@@ -246,10 +244,7 @@ SongInfo(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
 }
 
 OpenHelp(){ ;Shows all Hotkeys implemented
-	If MouseCheck()
-		Msgbox,64,Hotkey Combination Guide, Combination Guide:`n`nNote that all Buttons have to be pressed with the Mouse placed at the Bottom of the Screen`n`nALT+W = Play/Pause`nALT+X = Shuffle On/Off`nALT+E/ALT+Q = Next/Previous Track`nALT+R/ALT+F = Volume Up/Down`nALT+V = Sound Mute`nALT+S = Start/Hide Spotify`nALT+F1 = Help
-	else
-		SendInput !{F1}
+	Msgbox,64,Hotkey Combination Guide, Combination Guide:`n`nNote that all Buttons have to be pressed with the Mouse placed at the Bottom of the Screen`n`nALT+W = Play/Pause`nALT+X = Shuffle On/Off`nALT+E/ALT+Q = Next/Previous Track`nALT+R/ALT+F = Volume Up/Down`nALT+V = Sound Mute`nALT+S = Start/Hide Spotify`nALT+F1 = Help
 }
 
 OSD(Text="OSD",Colour="2dfc25",Duration="500",Font="Arial",Size="40"){ ; Displays an On-Screen Display, a text in the middle of the screen.
