@@ -111,14 +111,18 @@ MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
 	else
 		Send {Alt Down}k{Alt Up}
 	return
-
+!l::
+if MouseIsOver("ahk_class Shell_TrayWnd")
+	LockScreen()
+else
+	Send {Alt Down}l{Alt Up}
+return
 !F1::
 	if MouseIsOver("ahk_class Shell_TrayWnd")
 		OpenHelp()
 	else
 		Send {Alt Down}{F1}{Alt Up}
 	return
-
 !^y:: Reload ;Reload the script from the workspace
 
 VolUp(){ ;Increases the System Volume
@@ -224,8 +228,22 @@ SongInfo(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
 	thisID := winInfo%indexer%
 	WinGetTitle, playing, ahk_id %thisID%
 	Msgbox %playing%
+	clipboard = %playing%
 	DetectHiddenWindows, Off
 	
+}
+
+LockScreen(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
+	DetectHiddenWindows, On
+	WinGet, winInfo, List, ahk_exe Spotify.exe
+	indexer := 3
+	thisID := winInfo%indexer%
+	WinGetTitle, playing, ahk_id %thisID%
+	var := "Spotify Premium"
+	If !InStr(playing, var)
+		Send {Media_Play_Pause}
+	DllCall("LockWorkStation")
+	DetectHiddenWindows, Off
 }
 
 OpenHelp(){ ;Shows all Hotkeys implemented
