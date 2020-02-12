@@ -13,7 +13,6 @@ Creates hotkeys for controlling Spotify and other mediaprograms with standard ke
 ## Controls
 
 >All Hotkeys only start if the Cursor is placed on the taskbar. If it is somewhere else on the screen the normal hotkey will be replicated.
->As for now, the script requires a screenresolution of 1680x1050 to work correctly. A automatic screenadjustment is in work.
 
 
 Hotkey | Description
