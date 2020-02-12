@@ -239,7 +239,7 @@ LockScreen(){ ;Catches the Name of the Spotify.exe and prints it in a Message Bo
 	indexer := 3
 	thisID := winInfo%indexer%
 	WinGetTitle, playing, ahk_id %thisID%
-	var := "Spotify Premium"
+	var := "Spotify"
 	If !InStr(playing, var)
 		Send {Media_Play_Pause}
 	DllCall("LockWorkStation")

@@ -27,6 +27,7 @@ Alt + v | Mute Sound<sup>[3](#foot3)</sup>
 Alt + x | Activate Shuffle<sup>[1](#foot1)</sup>
 Alt + i | Turn On Transparency on Spotify<sup>[1](#foot1)</sup>
 Alt + k | (Almost) Turn Off Transparency on Spotify<sup>[1](#foot1)</sup>
+Alt + l | Locks screen and pauses Spotify if music is playing<sup>[1](#foot1)</sup>
 Alt + a | Display current song in a message box<sup>[1](#foot1)</sup>
 Alt + F1 | Show all controls
 
