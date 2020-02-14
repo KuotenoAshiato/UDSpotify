@@ -1,5 +1,7 @@
 #MaxHotkeysPerInterval 200
 #UseHook On
+#Include %A_ScriptDir%
+#Include lib\SpotifyAPI.ahk
 OSDColour2 = fffff  ; Can be any RGB color (it will be made transparent below).
 Gui, 2: +LastFound +AlwaysOnTop -Caption +ToolWindow  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
 Gui, 2:Font, s128, Times New Roman  ; Set a large font size (32-point).
@@ -11,6 +13,8 @@ SetTitleMatchMode 2
 SetKeyDelay, 1000
 StartUp()
 Gui, 2:Show, Hide
+
+global apier := new Spotify
 
 StartUp(){
 	IfWinExist ahk_exe Spotify.exe
@@ -36,6 +40,10 @@ StartUp(){
 		}
 		sleep 5000
 		Startup()
+	}
+
+	if !FileExist("%A_ScriptDir%\settings.ini"){
+		FileAppend,, %A_ScriptDir%\settings.ini
 	}
 }
 
@@ -112,11 +120,17 @@ MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
 		Send {Alt Down}k{Alt Up}
 	return
 !l::
-if MouseIsOver("ahk_class Shell_TrayWnd")
-	LockScreen()
-else
-	Send {Alt Down}l{Alt Up}
-return
+	if MouseIsOver("ahk_class Shell_TrayWnd")
+		LockScreen()
+	else
+		Send {Alt Down}l{Alt Up}
+	return
+!p::
+	if MouseIsOver("ahk_class Shell_TrayWnd")
+		PlayLister()
+	else
+		Send {Alt Down}p{Alt Up}
+	return
 !F1::
 	if MouseIsOver("ahk_class Shell_TrayWnd")
 		OpenHelp()
@@ -212,6 +226,7 @@ TransOn(){ ;Sets the Transparency of the active Spotify window to 120(Translucen
 	{
 		WinSet, Transparent, 120
 	}
+	OSD("Transparency On")
 }
 
 TransOff(){ ;Sets the Transparency of the active Spotify window to 250 (Non Transparent)
@@ -219,6 +234,7 @@ TransOff(){ ;Sets the Transparency of the active Spotify window to 250 (Non Tran
 	{
 		WinSet, Transparent, 250
 	}
+	OSD("Transparency Off")
 }
 
 SongInfo(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
@@ -230,10 +246,24 @@ SongInfo(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
 	Msgbox %playing%
 	clipboard = %playing%
 	DetectHiddenWindows, Off
-	
+	Pause, On
 }
 
-LockScreen(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
+PlayLister(){ ;Uses to Spotify AHK Api by CloakerSmoker to add the current track to a designated playlist
+	playlistid :=
+	errorhandle := "ERROR"
+	IniRead, playlistid, settings.ini, savelist, 1
+	if (playlistid = errorhandle)
+	{
+		playlistid := apier.Playlists.CreatePlaylist("UDSpotifySaves","Songs saved with the hotkey ALT+P in the UDSpotify.ahk",false).ID
+		IniWrite, %playlistid%, settings.ini, savelist, 1
+	}
+	trackid := apier.Player.GetCurrentPlaybackInfo().Track.ID
+	apier.Playlists.GetPlaylist(playlistid).AddTrack(trackid)
+	OSD("Added Track to Saved Playlist")
+}
+
+LockScreen(){ ;If the Spotify Windowtitle doesn't contain "Spotify" in it, it will pause the playing track. Afterwards the PC will be locked
 	DetectHiddenWindows, On
 	WinGet, winInfo, List, ahk_exe Spotify.exe
 	indexer := 3
