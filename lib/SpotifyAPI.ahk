@@ -435,7 +435,6 @@ class Playlists {
 	CreatePlaylist(name, description, public := true) {
 		headers := {1:{1:"Authorization", 2:"Bearer " . this.ParentObject.Util.token}, 2:{1:"Content-Type", 2:"application/json"}}
 		body := "{""name"":""" . name . """, ""description"":""" . description """, ""public"":" . public . "}"
-		MsgBox, % body
 		return new playlist(JSON.Load(this.ParentObject.Util.CustomCall("POST", "users/" . this.ParentObject.CurrentUser.id . "/playlists", headers,, body)), this.ParentObject)
 	}
 }
