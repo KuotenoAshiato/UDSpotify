@@ -11,10 +11,11 @@ WinSet, TransColor, %OSDColour2% 200 ; Make all pixels of this color transparent
 Gui, 2:Show, NoActivate, OSDGui
 SetTitleMatchMode 2
 SetKeyDelay, 1000
+global cond1 := True
 StartUp()
 Gui, 2:Show, Hide
-
 global apier := new Spotify
+
 
 StartUp(){
 	IfWinExist ahk_exe Spotify.exe
@@ -35,7 +36,10 @@ StartUp(){
 	else{
 		Try {
 			run "%appdata%\Spotify\Spotify.exe"
+
 		}Catch{
+			cond1 = false
+			MsgBox, "Spotify not installed"
 			return
 		}
 		sleep 5000
@@ -90,7 +94,7 @@ MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
 		Send {Alt Down}w{Alt Up}
 	return
 !s::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") && cond1 = true
 		StartSpotify()
 	else
 		Send {Alt Down}s{Alt Up}
@@ -102,19 +106,19 @@ MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
 		Send {Alt Down}x{Alt Up}
 	return
 !a::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") && cond1 = true
 		SongInfo()
 	else
 		Send {Alt Down}a{Alt Up}
 	return
 !i::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") && cond1 = true
 		TransOn()
 	else
 		Send {Alt Down}i{Alt Up}
 	return
 !k::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") && cond1 = true
 		TransOff()
 	else
 		Send {Alt Down}k{Alt Up}
@@ -246,7 +250,6 @@ SongInfo(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
 	Msgbox %playing%
 	clipboard = %playing%
 	DetectHiddenWindows, Off
-	Pause, On
 }
 
 PlayLister(){ ;Uses to Spotify AHK Api by CloakerSmoker to add the current track to a designated playlist
@@ -277,7 +280,7 @@ LockScreen(){ ;If the Spotify Windowtitle doesn't contain "Spotify" in it, it wi
 }
 
 OpenHelp(){ ;Shows all Hotkeys implemented
-	Msgbox,64,Hotkey Combination Guide, Combination Guide:`n`nNote that all Buttons have to be pressed with the Mouse placed at the Bottom of the Screen`n`nALT+W = Play/Pause`nALT+X = Shuffle On/Off`nALT+E/ALT+Q = Next/Previous Track`nALT+R/ALT+F = Volume Up/Down`nALT+V = Sound Mute`nALT+S = Start/Hide Spotify`nALT+F1 = Help
+	Msgbox,64,Hotkey Combination Guide, Combination Guide:`n`nNote that all Buttons have to be pressed with the Mouse placed at the Bottom of the Screen`n`nALT+W = Play/Pause`nALT+X = Shuffle On/Off`nALT+E/ALT+Q = Next/Previous Track`nALT+R/ALT+F = Volume Up/Down`nALT+V = Sound Mute`nALT+L = Lock Computer ans Pause Music`nALT+P = Add current song to Saved UDPlaylist`nALT+S = Start/Hide Spotify`nALT+F1 = Help
 }
 
 OSD(Text="OSD",Colour="2dfc25",Duration="500",Font="Arial",Size="40"){ ; Displays an On-Screen Display, a text in the middle of the screen.
