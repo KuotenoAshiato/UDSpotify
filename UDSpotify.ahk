@@ -58,31 +58,31 @@ MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
 
 ;All Hotkeys to start the software
 !r::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		VolUp()
 	else
 		Send {Alt Down}r{Alt Up}
 	return
 !f::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		VolDown()
 	else
 		Send {Alt Down}f{Alt Up}
 	return
 !v::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		VolMute()
 	else
 		Send {Alt Down}v{Alt Up}
 	return
 !e::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		PlayNext()
 	else
 		Send {Alt Down}e{Alt Up}
 	return
 !q::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		PlayPrev()
 	else
 		Send {Alt Down}q{Alt Up}
@@ -94,49 +94,49 @@ MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
 		Send {Alt Down}w{Alt Up}
 	return
 !s::
-	if MouseIsOver("ahk_class Shell_TrayWnd") && cond1 = true
+	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && cond1 = true
 		StartSpotify()
 	else
 		Send {Alt Down}s{Alt Up}
 	return
 !x::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		ShuffleSwitch()
 	else
 		Send {Alt Down}x{Alt Up}
 	return
 !a::
-	if MouseIsOver("ahk_class Shell_TrayWnd") && cond1 = true
+	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && cond1 = true
 		SongInfo()
 	else
 		Send {Alt Down}a{Alt Up}
 	return
 !i::
-	if MouseIsOver("ahk_class Shell_TrayWnd") && cond1 = true
+	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && cond1 = true
 		TransOn()
 	else
 		Send {Alt Down}i{Alt Up}
 	return
 !k::
-	if MouseIsOver("ahk_class Shell_TrayWnd") && cond1 = true
+	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && cond1 = true
 		TransOff()
 	else
 		Send {Alt Down}k{Alt Up}
 	return
 !l::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		LockScreen()
 	else
 		Send {Alt Down}l{Alt Up}
 	return
 !p::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		PlayLister()
 	else
 		Send {Alt Down}p{Alt Up}
 	return
 !F1::
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		OpenHelp()
 	else
 		Send {Alt Down}{F1}{Alt Up}
