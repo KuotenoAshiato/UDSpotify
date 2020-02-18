@@ -258,12 +258,12 @@ PlayLister(){ ;Uses to Spotify AHK Api by CloakerSmoker to add the current track
 	IniRead, playlistid, settings.ini, savelist, 1
 	if (playlistid = errorhandle)
 	{
-		playlistid := apier.Playlists.CreatePlaylist("UDSpotifySaves","Songs saved with the hotkey ALT+P in the UDSpotify.ahk",false).ID
+		playlistid := apier.Playlists.CreatePlaylist("UDSpotifySaves","Songs saved using ALT+P from the UDSpotify.ahk Script",false).ID
 		IniWrite, %playlistid%, settings.ini, savelist, 1
 	}
 	trackid := apier.Player.GetCurrentPlaybackInfo().Track.ID
 	apier.Playlists.GetPlaylist(playlistid).AddTrack(trackid)
-	OSD("Added Track to Saved Playlist")
+	OSD("Added " . apier.Player.GetCurrentPlaybackInfo().Track.Name . " to Saved Playlist",,"5000")
 }
 
 LockScreen(){ ;If the Spotify Windowtitle doesn't contain "Spotify" in it, it will pause the playing track. Afterwards the PC will be locked
