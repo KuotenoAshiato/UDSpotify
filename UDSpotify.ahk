@@ -2,59 +2,25 @@
 #UseHook On
 #Include %A_ScriptDir%
 #Include lib\SpotifyAPI.ahk
-OSDColour2 = fffff  ; Can be any RGB color (it will be made transparent below).
+
+global cond1 := True
+global apier := new Spotify
+global OSDColour1 := 
+
+IniSetup()
+OSDColour2 := ColourCheck(OSDColour1)
 Gui, 2: +LastFound +AlwaysOnTop -Caption +ToolWindow  ; +ToolWindow avoids a taskbar button and an alt-tab menu item.
 Gui, 2:Font, s128, Times New Roman  ; Set a large font size (32-point).
-Gui, 2:Add, Text, vOSDControl c2dfc25 x60 y200, Loading Script... ; XX & YY serve to auto-size the window; add some random letters to enable a longer string of text (but it might not fit on the screen).
+Gui, 2:Add, Text, vOSDControl c%OSDColour1% x60 y200, Loading Script... ; XX & YY serve to auto-size the window; add some random letters to enable a longer string of text (but it might not fit on the screen).
 Gui, 2:Color, %OSDColour2%
-WinSet, TransColor, %OSDColour2% 200 ; Make all pixels of this color transparent and make the text itself translucent (150)
+WinSet, TransColor, %OSDColour2% 200 ; Make all pixels of this color transparent and make the text itself translucent
 Gui, 2:Show, NoActivate, OSDGui
 SetTitleMatchMode 2
 SetKeyDelay, 1000
-global cond1 := True
 StartUp()
 Gui, 2:Show, Hide
-global apier := new Spotify
 
 
-StartUp(){
-	IfWinExist ahk_exe Spotify.exe
-	{
-		WinSet, Transparent, 120
-		WinHide
-		IfWinExist ahk_exe Spotify.exe
-		{
-			WinSet, Transparent, 120
-			WinHide
-			IfWinExist ahk_exe Spotify.exe
-			{
-				WinSet, Transparent, 120
-				WinSet, AlwaysOnTop, On
-			}
-		}
-	}
-	else{
-		Try {
-			run "%appdata%\Spotify\Spotify.exe"
-
-		}Catch{
-			cond1 = false
-			MsgBox, "Spotify not installed"
-			return
-		}
-		sleep 5000
-		Startup()
-	}
-
-	if !FileExist("%A_ScriptDir%\settings.ini"){
-		FileAppend,, %A_ScriptDir%\settings.ini
-	}
-}
-
-MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
-    MouseGetPos,,, window
-    return WinExist(windowtitle . " ahk_id " . window)
-}
 
 ;All Hotkeys to start the software
 !r::
@@ -130,7 +96,7 @@ MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
 		Send {Alt Down}l{Alt Up}
 	return
 !p::
-	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
+	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && apier.Player.GetCurrentPlaybackInfo()["is_playing"]
 		PlayLister()
 	else
 		Send {Alt Down}p{Alt Up}
@@ -142,6 +108,57 @@ MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
 		Send {Alt Down}{F1}{Alt Up}
 	return
 !^y:: Reload ;Reload the script from the workspace
+
+
+IniSetup(){
+	if !FileExist("%A_ScriptDir%\settings.ini")
+		FileAppend,, %A_ScriptDir%\settings.ini
+	IniRead, OSDColour1, settings.ini, basics, color, c2dfc25
+	if OSDColour1 = c2dfc25
+		IniWrite, %OSDColour1%, settings.ini, basics, color
+}
+
+ColourCheck(colour){
+	If substr(colour, 6 , 1) != 9
+		return substr(colour,1,5)9
+	Else
+		return substr(colour,1,5)8
+}
+
+StartUp(){
+	IfWinExist ahk_exe Spotify.exe
+	{
+		WinSet, Transparent, 120
+		WinHide
+		IfWinExist ahk_exe Spotify.exe
+		{
+			WinSet, Transparent, 120
+			WinHide
+			IfWinExist ahk_exe Spotify.exe
+			{
+				WinSet, Transparent, 120
+				WinSet, AlwaysOnTop, On
+			}
+		}
+	}
+	else{
+		Try {
+			run "%appdata%\Spotify\Spotify.exe"
+
+		}Catch{
+			cond1 = false
+			MsgBox, "Spotify not installed"
+			return
+		}
+		sleep 5000
+		Startup()
+	}
+}
+
+MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
+    MouseGetPos,,, window
+    return WinExist(windowtitle . " ahk_id " . window)
+}
 
 VolUp(){ ;Increases the System Volume
 		SoundSet +1
@@ -252,18 +269,18 @@ SongInfo(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
 	DetectHiddenWindows, Off
 }
 
-PlayLister(){ ;Uses to Spotify AHK Api by CloakerSmoker to add the current track to a designated playlist
+PlayLister(){ ;Uses the SpotifyAHK-Api by CloakerSmoker to add the current track to a designated playlist
 	playlistid :=
 	errorhandle := "ERROR"
 	IniRead, playlistid, settings.ini, savelist, 1
 	if (playlistid = errorhandle)
 	{
-		playlistid := apier.Playlists.CreatePlaylist("UDSpotifySaves","Songs saved using ALT+P from the UDSpotify.ahk Script",false).ID
+		playlistid := apier.Playlists.CreatePlaylist("UDSpotifySaves","Songs saved using ALT+P from the UDSpotify.ahk Script (https://github.com/KuotenoAshiato/UDSpotify/)",false).ID
 		IniWrite, %playlistid%, settings.ini, savelist, 1
 	}
 	trackid := apier.Player.GetCurrentPlaybackInfo().Track.ID
 	apier.Playlists.GetPlaylist(playlistid).AddTrack(trackid)
-	OSD("Added " . apier.Player.GetCurrentPlaybackInfo().Track.Name . " to Saved Playlist",,"5000")
+	OSD("'" . apier.Player.GetCurrentPlaybackInfo().Track.Name . "' added",,"5000")
 }
 
 LockScreen(){ ;If the Spotify Windowtitle doesn't contain "Spotify" in it, it will pause the playing track. Afterwards the PC will be locked
@@ -283,8 +300,8 @@ OpenHelp(){ ;Shows all Hotkeys implemented
 	Msgbox,64,Hotkey Combination Guide, Combination Guide:`n`nNote that all Buttons have to be pressed with the Mouse placed at the Bottom of the Screen`n`nALT+W = Play/Pause`nALT+X = Shuffle On/Off`nALT+E/ALT+Q = Next/Previous Track`nALT+R/ALT+F = Volume Up/Down`nALT+V = Sound Mute`nALT+L = Lock Computer ans Pause Music`nALT+P = Add current song to Saved UDPlaylist`nALT+S = Start/Hide Spotify`nALT+F1 = Help
 }
 
-OSD(Text="OSD",Colour="2dfc25",Duration="500",Font="Arial",Size="40"){ ; Displays an On-Screen Display, a text in the middle of the screen.
-	Gui, 2:Font, c%Colour% s%Size%, %Font%  ;If desired, use a line like this to set a new default font for the window.
+OSD(Text="OSD",Colour="c2dfc25",Duration="500",Font="Niagara Engraved Regular",Size="40"){ ; Displays an On-Screen Display, a text in the middle of the screen.
+	Gui, 2:Font, c%OSDColour1% s%Size%, %Font%  ;If desired, use a line like this to set a new default font for the window.
 	GuiControl, 2:Font, OSDControl  ;Put the above font into effect for a control.
 	GuiControl, 2:, OSDControl, %Text%
 	Gui, 2:Show, X20,Y200,NoActivate, OSDGui ;NoActivate avoids deactivating the currently active window; add "X600 Y800" to put the text at some specific place on the screen instead of centred.
