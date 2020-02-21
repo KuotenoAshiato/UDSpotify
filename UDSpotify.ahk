@@ -101,6 +101,12 @@ Gui, 2:Show, Hide
 	else
 		Send {Alt Down}p{Alt Up}
 	return
+!u::
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
+		ListSelector()
+	else
+		Send {Alt Down}u{Alt Up}
+	return
 !F1::
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		OpenHelp()
@@ -281,6 +287,44 @@ PlayLister(){ ;Uses the SpotifyAHK-Api by CloakerSmoker to add the current track
 	trackid := apier.Player.GetCurrentPlaybackInfo().Track.ID
 	apier.Playlists.GetPlaylist(playlistid).AddTrack(trackid)
 	OSD("'" . apier.Player.GetCurrentPlaybackInfo().Track.Name . "' added",,"5000")
+}
+
+ListSelector(){
+	newplaylists := apier.Users.getUser(apier.CurrentUser.id).GetPlaylists()
+	global List :=
+	Gui, 1:Destroy
+	Gui, Add, Text,, Wich Playlist to add Songs to?
+	namelist := newplaylists[1].Name "|"
+	loop, 49 {
+		zwobject := newplaylists[A_Index+1]
+		if(zwobject.owner.id = apier.CurrentUser.id){
+			namelist .= "|" zwobject.Name
+		}
+	}
+	Gui, Add, DDL, vList, %namelist%
+	Gui, Add, Button, Default glistsubmit, Go
+	Gui, Add, Button, glistnew, New Playlist
+	Gui, Show
+	pause on
+	return
+	listsubmit:
+	Gui, Submit, NoHide
+	Gui, 1:Destroy
+	zw :=
+	for k, v in newplaylists {
+		if v.Name = List
+			zw := % v.ID
+	}
+	IniWrite, %zw%, settings.ini, savelist, 1
+	pause off
+	return
+	listnew:
+	Gui, Submit, NoHide
+	Gui, 1:Destroy
+	playlistid := apier.Playlists.CreatePlaylist("UDSpotifySaves","Songs saved using ALT+P from the UDSpotify.ahk Script (https://github.com/KuotenoAshiato/UDSpotify/)",false).ID
+	IniWrite, %playlistid%, settings.ini, savelist, 1
+	pause off
+	return
 }
 
 LockScreen(){ ;If the Spotify Windowtitle doesn't contain "Spotify" in it, it will pause the playing track. Afterwards the PC will be locked
