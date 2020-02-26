@@ -1,9 +1,11 @@
 #MaxHotkeysPerInterval 200
 #UseHook On
 #Include %A_ScriptDir%
-#Include lib\SpotifyAPI.ahk
+#include lib\SpotifyAPI.ahk
+#Include lib
 
 global cond1 := True
+global shuffle := false
 global apier := new Spotify
 global OSDColour1 := 
 
@@ -17,7 +19,8 @@ WinSet, TransColor, %OSDColour2% 200 ; Make all pixels of this color transparent
 Gui, 2:Show, NoActivate, OSDGui
 SetTitleMatchMode 2
 SetKeyDelay, 1000
-StartUp()
+StartUpFunc()
+apier.Player.SetShuffle(shuffle)
 Gui, 2:Show, Hide
 
 
@@ -67,13 +70,13 @@ Gui, 2:Show, Hide
 	return
 !x::
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
-		ShuffleSwitch()
+		ShuffleSwitchAPI()
 	else
 		Send {Alt Down}x{Alt Up}
 	return
 !a::
-	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && cond1 = true
-		SongInfo()
+	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd"))
+		SongInfoAPI()
 	else
 		Send {Alt Down}a{Alt Up}
 	return
@@ -107,6 +110,7 @@ Gui, 2:Show, Hide
 	else
 		Send {Alt Down}u{Alt Up}
 	return
+
 !F1::
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		OpenHelp()
@@ -130,8 +134,11 @@ ColourCheck(colour){
 	Else
 		return substr(colour,1,5)8
 }
-
-StartUp(){
+StartUpFunc(){
+	StartUpRec()
+	apier.Player.SetShuffle(shuffle)
+}
+StartUpRec(){
 	IfWinExist ahk_exe Spotify.exe
 	{
 		WinSet, Transparent, 120
@@ -157,7 +164,7 @@ StartUp(){
 			return
 		}
 		sleep 5000
-		Startup()
+		StartUpRec()
 	}
 }
 
@@ -198,13 +205,19 @@ PlayPause(){ ;Uses Media Event 'Play Pause'
 		OSD("Play / Pause")
 }
 
-ShuffleSwitch(){ ;Routes Ctrl+S into the Spotify .exe to trigger the shuffle button
+ShuffleSwitchNonAPI(){ ;Routes Ctrl+S into the Spotify .exe to trigger the shuffle button
 	DetectHiddenWindows, On
 	WinGet, winInfo, List, ahk_exe Spotify.exe
 	indexer := 3
 	thisID := winInfo%indexer%
 	ControlFocus,, ahk_id %thisID%
 	Send {Ctrl Down}s{Ctrl Up}
+	OSD("Shuffle Mode On / Off")
+}
+
+ShuffleSwitchAPI(){ ;uses the API to trigger shuffle
+	shuffle := !shuffle
+	apier.Player.SetShuffle(shuffle)
 	OSD("Shuffle Mode On / Off")
 }
 
@@ -264,7 +277,7 @@ TransOff(){ ;Sets the Transparency of the active Spotify window to 250 (Non Tran
 	OSD("Transparency Off")
 }
 
-SongInfo(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
+SongInfoNonAPI(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
 	DetectHiddenWindows, On
 	WinGet, winInfo, List, ahk_exe Spotify.exe
 	indexer := 3
@@ -275,11 +288,25 @@ SongInfo(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
 	DetectHiddenWindows, Off
 }
 
+SongInfoAPI(){ ;Catches the Name of the Spotify.exe and prints it in a Message Box
+	playingTit := apier.Player.GetCurrentPlaybackInfo().Track.Name
+	playingArt := apier.Player.GetCurrentPlaybackInfo().Track.Artists
+	playingArtTit := playingArt[1].Name
+	count := -1
+	for index, artist in playingArt
+		count++
+	Loop, %count%
+		playingArtTit .= ", " playingArt[A_Index+1].Name
+	Msgbox %playingTit% - %playingArtTit%
+	clipboard = %playing%
+}
+
 PlayLister(){ ;Uses the SpotifyAHK-Api by CloakerSmoker to add the current track to a designated playlist
 	playlistid :=
 	errorhandle := "ERROR"
 	IniRead, playlistid, settings.ini, savelist, 1
 	if (playlistid = errorhandle)
+	if (playlistid = errorhandle || playlistid = "")
 	{
 		playlistid := apier.Playlists.CreatePlaylist("UDSpotifySaves","Songs saved using ALT+P from the UDSpotify.ahk Script (https://github.com/KuotenoAshiato/UDSpotify/)",false).ID
 		IniWrite, %playlistid%, settings.ini, savelist, 1
