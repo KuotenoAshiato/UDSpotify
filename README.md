@@ -44,7 +44,7 @@ Alt + F1 | Show all controls
 
 <a name="foot4">4</a>: Utilizes [Spotify API](https://github.com/CloakerSmoker/Spotify.ahk). Needs access when starting the script.
 
-<a name="foot42">4.2</a>: Can utilize [Spotify API](https://github.com/CloakerSmoker/Spotify.ahk). But an offline comment is usable after renaming the function in the Hotkey(ProgramxyAPI -> ProgramxyNonAPI)
+<a name="foot42">4.2</a>: Can utilize [Spotify API](https://github.com/CloakerSmoker/Spotify.ahk). But an offline variation is usable after renaming the function in the Hotkey(ProgramxyAPI -> ProgramxyNonAPI)
 
 
 Uses a slightly modified version of the [Spotify.ahk by CloakerSmoker](https://github.com/CloakerSmoker/Spotify.ahk), the [AHKhttp library by zhamlin](https://github.com/zhamlin/AHKhttp), the [AHKsock library by jleb](https://github.com/jleb/AHKsock) and the [Cyrpt library by Deo](https://autohotkey.com/board/topic/67155-ahk-l-crypt-ahk-cryptography-class-encryption-hashing/)
