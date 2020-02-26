@@ -4,9 +4,11 @@ Creates hotkeys for controlling Spotify and other mediaprograms with standard ke
 ## Installation
 
   ### Easy Mode:
+  * Download .exe
   * Run the executable
    ### Medium Mode:
   * Install AutoHotkey
+  * Paste UDSpotify.ahk and lib folder to the same path
   * Run the .ahk-File
 
 
