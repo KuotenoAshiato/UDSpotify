@@ -20,7 +20,6 @@ Gui, 2:Show, NoActivate, OSDGui
 SetTitleMatchMode 2
 SetKeyDelay, 1000
 StartUpFunc()
-apier.Player.SetShuffle(shuffle)
 Gui, 2:Show, Hide
 
 
@@ -69,7 +68,7 @@ Gui, 2:Show, Hide
 		Send {Alt Down}s{Alt Up}
 	return
 !x::
-	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
+	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && ActiveCheck()
 		ShuffleSwitchAPI()
 	else
 		Send {Alt Down}x{Alt Up}
@@ -136,7 +135,6 @@ ColourCheck(colour){
 }
 StartUpFunc(){
 	StartUpRec()
-	apier.Player.SetShuffle(shuffle)
 }
 StartUpRec(){
 	IfWinExist ahk_exe Spotify.exe
@@ -171,6 +169,22 @@ StartUpRec(){
 MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
     MouseGetPos,,, window
     return WinExist(windowtitle . " ahk_id " . window)
+}
+
+ActiveCheck(){
+	devlist := apier.Player.GetDeviceList()
+	activedev := false
+	count := -1
+
+	for index, device in devlist
+		count++
+	Loop, %count%
+		if devlist[A_Index].isactive
+		{
+			return true
+			MsgBox % devlist[A_Index].Name
+		}
+	return false
 }
 
 VolUp(){ ;Increases the System Volume
