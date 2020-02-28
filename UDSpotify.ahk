@@ -5,7 +5,7 @@
 #Include lib
 
 global cond1 := True
-global shuffle := false
+global shuffle := 
 global apier := new Spotify
 global OSDColour1 := 
 
@@ -25,92 +25,95 @@ Gui, 2:Show, Hide
 
 
 ;All Hotkeys to start the software
-!r::
+!r:: ;Volume Up
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		VolUp()
 	else
 		Send {Alt Down}r{Alt Up}
 	return
-!f::
+!f:: ;Volume Down
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		VolDown()
 	else
 		Send {Alt Down}f{Alt Up}
 	return
-!v::
+!v:: ;Mute Sound
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		VolMute()
 	else
 		Send {Alt Down}v{Alt Up}
 	return
-!e::
+!e:: ;Next Track
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		PlayNext()
 	else
 		Send {Alt Down}e{Alt Up}
 	return
-!q::
+!q:: ;Previous Track
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		PlayPrev()
 	else
 		Send {Alt Down}q{Alt Up}
 	return
-!w::
+!w:: ;Play / Pause
 	if MouseIsOver("ahk_class Shell_TrayWnd")
 		PlayPause()
 	else
 		Send {Alt Down}w{Alt Up}
 	return
-!s::
+!s:: ;Open Spotify
 	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && cond1 = true
 		StartSpotify()
 	else
 		Send {Alt Down}s{Alt Up}
 	return
-!x::
+!x:: ;Switch Shufflemode
 	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && ActiveCheck()
 		ShuffleSwitchAPI()
 	else
 		Send {Alt Down}x{Alt Up}
 	return
-!a::
+!a:: ;Songinfo Msgbox + Clipboard
 	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd"))
 		SongInfoAPI()
 	else
 		Send {Alt Down}a{Alt Up}
 	return
-!i::
+!i:: ;Make Spotify Translucent
 	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && cond1 = true
 		TransOn()
 	else
 		Send {Alt Down}i{Alt Up}
 	return
-!k::
+!k:: ;Make Spotify non Transparent
 	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && cond1 = true
 		TransOff()
 	else
 		Send {Alt Down}k{Alt Up}
 	return
-!l::
+!l:: ;Lock Screen and Pause Music, if Playing
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		LockScreen()
 	else
 		Send {Alt Down}l{Alt Up}
 	return
-!p::
-	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && apier.Player.GetCurrentPlaybackInfo()["is_playing"]
-		PlayLister()
-	else
-		Send {Alt Down}p{Alt Up}
-	return
-!u::
+!u:: ;Select Playlist to Save Songs to
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		ListSelector()
 	else
 		Send {Alt Down}u{Alt Up}
 	return
+!p:: ;Save Current Track to Selected Playlist
+	if (MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")) && apier.Player.GetCurrentPlaybackInfo()["is_playing"]
+		PlayLister()
+	else
+		Send {Alt Down}p{Alt Up}
+	return
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
+	else
+	return
 
-!F1::
+!F1:: ;Openhelp, Discontinued
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		OpenHelp()
 	else
@@ -119,24 +122,25 @@ Gui, 2:Show, Hide
 !^y:: Reload ;Reload the script from the workspace
 
 
-IniSetup(){
+IniSetup(){ ;Create the Inifile with basic Settings
 	if !FileExist("%A_ScriptDir%\settings.ini")
 		FileAppend,, %A_ScriptDir%\settings.ini
 	IniRead, OSDColour1, settings.ini, basics, color, c2dfc25
 	if OSDColour1 = c2dfc25
-		IniWrite, %OSDColour1%, settings.ini, basics, color
+		IniWrite, %OSDColour1%, settings.ini, basics, color 
 }
 
-ColourCheck(colour){
+ColourCheck(colour){ ;Create UI Colors
 	If substr(colour, 6 , 1) != 9
 		return substr(colour,1,5)9
 	Else
 		return substr(colour,1,5)8
 }
-StartUpFunc(){
+StartUpFunc(){ ;Help Function for Organizing Startup features (WIP)
 	StartUpRec()
+
 }
-StartUpRec(){
+StartUpRec(){ ;Basic Registration and Startup of Spotify
 	IfWinExist ahk_exe Spotify.exe
 	{
 		WinSet, Transparent, 120
@@ -163,15 +167,15 @@ StartUpRec(){
 		}
 		sleep 5000
 		StartUpRec()
-	}
+	} 
 }
 
-MouseIsOver(windowtitle){ ;Enhanced Taskbar recognition
+MouseIsOver(windowtitle){ ;Checks if the Cursor is hovering desired object
     MouseGetPos,,, window
-    return WinExist(windowtitle . " ahk_id " . window)
+    return WinExist(windowtitle . " ahk_id " . window) 
 }
 
-ActiveCheck(){
+ActiveCheck(){ ;Check if a Spotify Device is Active to Catch 404 Errors
 	devlist := apier.Player.GetDeviceList()
 	activedev := false
 	count := -1
@@ -230,6 +234,8 @@ ShuffleSwitchNonAPI(){ ;Routes Ctrl+S into the Spotify .exe to trigger the shuff
 }
 
 ShuffleSwitchAPI(){ ;uses the API to trigger shuffle
+	if shuffle = 
+		shuffle := true
 	shuffle := !shuffle
 	apier.Player.SetShuffle(shuffle)
 	OSD("Shuffle Mode On / Off")
@@ -319,7 +325,6 @@ PlayLister(){ ;Uses the SpotifyAHK-Api by CloakerSmoker to add the current track
 	playlistid :=
 	errorhandle := "ERROR"
 	IniRead, playlistid, settings.ini, savelist, 1
-	if (playlistid = errorhandle)
 	if (playlistid = errorhandle || playlistid = "")
 	{
 		playlistid := apier.Playlists.CreatePlaylist("UDSpotifySaves","Songs saved using ALT+P from the UDSpotify.ahk Script (https://github.com/KuotenoAshiato/UDSpotify/)",false).ID
@@ -330,13 +335,16 @@ PlayLister(){ ;Uses the SpotifyAHK-Api by CloakerSmoker to add the current track
 	OSD("'" . apier.Player.GetCurrentPlaybackInfo().Track.Name . "' added",,"5000")
 }
 
-ListSelector(){
+ListSelector(){ ;Create a Dropdownlist which will be used for Song saves.
 	newplaylists := apier.Users.getUser(apier.CurrentUser.id).GetPlaylists()
 	global List :=
 	Gui, 1:Destroy
 	Gui, Add, Text,, Wich Playlist to add Songs to?
 	namelist := newplaylists[1].Name "|"
-	loop, 49 {
+	count := -1
+	for index, playlist in newplaylists
+		count++
+	loop, %count% {
 		zwobject := newplaylists[A_Index+1]
 		if(zwobject.owner.id = apier.CurrentUser.id){
 			namelist .= "|" zwobject.Name
