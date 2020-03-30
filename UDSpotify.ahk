@@ -56,7 +56,7 @@ Gui, 2:Show, Hide
 		Send {Alt Down}q{Alt Up}
 	return
 !w:: ;Play / Pause
-	if MouseIsOver("ahk_class Shell_TrayWnd")
+	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 		PlayPause()
 	else
 		Send {Alt Down}w{Alt Up}
@@ -318,7 +318,8 @@ SongInfoAPI(){ ;Catches the Name of the Spotify.exe and prints it in a Message B
 	Loop, %count%
 		playingArtTit .= ", " playingArt[A_Index+1].Name
 	Msgbox %playingTit% - %playingArtTit%
-	clipboard = %playing%
+	playing = %playingTit% - %playingArtTit%
+	clipboard := playing
 }
 
 PlayLister(){ ;Uses the SpotifyAHK-Api by CloakerSmoker to add the current track to a designated playlist
@@ -354,7 +355,6 @@ ListSelector(){ ;Create a Dropdownlist which will be used for Song saves.
 	Gui, Add, Button, Default glistsubmit, Go
 	Gui, Add, Button, glistnew, New Playlist
 	Gui, Show
-	pause on
 	return
 	listsubmit:
 	Gui, Submit, NoHide
@@ -365,14 +365,12 @@ ListSelector(){ ;Create a Dropdownlist which will be used for Song saves.
 			zw := % v.ID
 	}
 	IniWrite, %zw%, settings.ini, savelist, 1
-	pause off
 	return
 	listnew:
 	Gui, Submit, NoHide
 	Gui, 1:Destroy
 	playlistid := apier.Playlists.CreatePlaylist("UDSpotifySaves","Songs saved using ALT+P from the UDSpotify.ahk Script (https://github.com/KuotenoAshiato/UDSpotify/)",false).ID
 	IniWrite, %playlistid%, settings.ini, savelist, 1
-	pause off
 	return
 }
 
