@@ -337,7 +337,7 @@ PlayLister(){ ;Uses the SpotifyAHK-Api by CloakerSmoker to add the current track
 }
 
 ListSelector(){ ;Create a Dropdownlist which will be used for Song saves.
-	newplaylists := apier.Users.getUser(apier.CurrentUser.id).GetPlaylists()
+	global newplaylists := apier.Users.getUser(apier.CurrentUser.id).GetPlaylists()
 	global List :=
 	Gui, 1:Destroy
 	Gui, Add, Text,, Wich Playlist to add Songs to?
@@ -359,12 +359,14 @@ ListSelector(){ ;Create a Dropdownlist which will be used for Song saves.
 	listsubmit:
 	Gui, Submit, NoHide
 	Gui, 1:Destroy
-	zw :=
+	global tempID := 
 	for k, v in newplaylists {
-		if v.Name = List
-			zw := % v.ID
+		if v.Name = List{
+			tempID := % v.ID
+		}
 	}
-	IniWrite, %zw%, settings.ini, savelist, 1
+	
+	IniWrite, %tempID%, settings.ini, savelist, 1
 	return
 	listnew:
 	Gui, Submit, NoHide
