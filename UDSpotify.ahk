@@ -22,7 +22,7 @@ SetKeyDelay, 1000
 StartUpFunc()
 Gui, 2:Show, Hide
 
-
+;To be added: User Choice for Media or API Hotkey (Hotkey switch/drodown/[Automatic? => Bulky, Internet Disconnect/Call Settings])
 
 ;All Hotkeys to start the software
 !r:: ;Volume Up
@@ -109,8 +109,11 @@ Gui, 2:Show, Hide
 	else
 		Send {Alt Down}p{Alt Up}
 	return
+!o:: ;WIP Color Picker for UI
 	if MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
+		ColorPicker()
 	else
+		Send {Alt Down}o{Alt Up}
 	return
 
 !F1:: ;Openhelp, Discontinued
@@ -340,7 +343,7 @@ ListSelector(){ ;Create a Dropdownlist which will be used for Song saves.
 	global newplaylists := apier.Users.getUser(apier.CurrentUser.id).GetPlaylists()
 	global List :=
 	Gui, 1:Destroy
-	Gui, Add, Text,, Wich Playlist to add Songs to?
+	Gui, Add, Text,, Which Playlist to add Songs to?
 	namelist := newplaylists[1].Name "|"
 	count := -1
 	for index, playlist in newplaylists
@@ -376,6 +379,10 @@ ListSelector(){ ;Create a Dropdownlist which will be used for Song saves.
 	return
 }
 
+ColorPicker(){ ;WIP Color Picker for UI
+	
+}
+
 LockScreen(){ ;If the Spotify Windowtitle doesn't contain "Spotify" in it, it will pause the playing track. Afterwards the PC will be locked
 	DetectHiddenWindows, On
 	WinGet, winInfo, List, ahk_exe Spotify.exe
@@ -390,7 +397,7 @@ LockScreen(){ ;If the Spotify Windowtitle doesn't contain "Spotify" in it, it wi
 }
 
 OpenHelp(){ ;Shows all Hotkeys implemented
-	Msgbox,64,Hotkey Combination Guide, Combination Guide:`n`nNote that all Buttons have to be pressed with the Mouse placed at the Bottom of the Screen`n`nALT+W = Play/Pause`nALT+X = Shuffle On/Off`nALT+E/ALT+Q = Next/Previous Track`nALT+R/ALT+F = Volume Up/Down`nALT+V = Sound Mute`nALT+L = Lock Computer ans Pause Music`nALT+P = Add current song to Saved UDPlaylist`nALT+S = Start/Hide Spotify`nALT+F1 = Help
+	Msgbox,64,Hotkey Combination Guide, Combination Guide:`n`nNote that all Buttons have to be pressed with the Mouse placed at the Bottom of the Screen`n`nALT+W = Play/Pause`nALT+X = Shuffle On/Off`nALT+E/ALT+Q = Next/Previous Track`nALT+R/ALT+F = Volume Up/Down`nALT+V = Sound Mute`nALT+L = Lock Computer ans Pause Music`nALT+P = Add current song to Saved UDPlaylist`nALT+U = Select Playlist of ALT+P Fnuctionality`nALT+S = Start/Hide Spotify`nALT+F1 = Help
 }
 
 OSD(Text="OSD",Colour="c2dfc25",Duration="500",Font="Niagara Engraved Regular",Size="40"){ ; Displays an On-Screen Display, a text in the middle of the screen.
