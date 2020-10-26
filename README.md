@@ -32,6 +32,7 @@ Alt + k | (Almost) Turn Off Transparency on Spotify<sup>[1](#foot1)</sup>
 Alt + l | Locks screen and pauses Spotify if music is playing<sup>[1](#foot1)</sup>
 Alt + a | Display current song in a message box<sup>[4.2](#foot42)</sup>
 Alt + p | Adds current track to a (new) playlist<sup>[4](#foot4)</sup>
+Alt + u | Lists first 25 playlists for selection of Alt+p hotkey<sup>[4](#foot4)</sup>
 Alt + F1 | Show all controls
 
 ### Explanation
